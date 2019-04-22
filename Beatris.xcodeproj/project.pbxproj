@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		605ED080226DF57600D439D5 /* EntranceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED07F226DF57600D439D5 /* EntranceViewController.swift */; };
+		605ED082226DFC5C00D439D5 /* BattleFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED081226DFC5C00D439D5 /* BattleFieldView.swift */; };
+		605ED084226E031700D439D5 /* Battle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED083226E031700D439D5 /* Battle.swift */; };
+		605ED086226E063400D439D5 /* Commons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED085226E063400D439D5 /* Commons.swift */; };
 		60AADC00226DE4F300A0C5CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AADBFF226DE4F300A0C5CA /* AppDelegate.swift */; };
-		60AADC02226DE4F300A0C5CA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AADC01226DE4F300A0C5CA /* ViewController.swift */; };
 		60AADC05226DE4F300A0C5CA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60AADC03226DE4F300A0C5CA /* Main.storyboard */; };
 		60AADC07226DE4F500A0C5CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60AADC06226DE4F500A0C5CA /* Assets.xcassets */; };
 		60AADC0A226DE4F500A0C5CA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60AADC08226DE4F500A0C5CA /* LaunchScreen.storyboard */; };
 		60AADC15226DE4F600A0C5CA /* BeatrisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AADC14226DE4F600A0C5CA /* BeatrisTests.swift */; };
 		60AADC20226DE4F600A0C5CA /* BeatrisUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AADC1F226DE4F600A0C5CA /* BeatrisUITests.swift */; };
+		60AADC30226DE52B00A0C5CA /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AADC2F226DE52B00A0C5CA /* Block.swift */; };
+		60AADC32226DE54E00A0C5CA /* BeatrisViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AADC31226DE54E00A0C5CA /* BeatrisViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +39,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		605ED07F226DF57600D439D5 /* EntranceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntranceViewController.swift; sourceTree = "<group>"; };
+		605ED081226DFC5C00D439D5 /* BattleFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleFieldView.swift; sourceTree = "<group>"; };
+		605ED083226E031700D439D5 /* Battle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Battle.swift; sourceTree = "<group>"; };
+		605ED085226E063400D439D5 /* Commons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commons.swift; sourceTree = "<group>"; };
 		60AADBFC226DE4F300A0C5CA /* Beatris.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Beatris.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60AADBFF226DE4F300A0C5CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		60AADC01226DE4F300A0C5CA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		60AADC04226DE4F300A0C5CA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		60AADC06226DE4F500A0C5CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		60AADC09226DE4F500A0C5CA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +55,8 @@
 		60AADC1B226DE4F600A0C5CA /* BeatrisUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeatrisUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		60AADC1F226DE4F600A0C5CA /* BeatrisUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatrisUITests.swift; sourceTree = "<group>"; };
 		60AADC21226DE4F600A0C5CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		60AADC2F226DE52B00A0C5CA /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
+		60AADC31226DE54E00A0C5CA /* BeatrisViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatrisViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +107,9 @@
 		60AADBFE226DE4F300A0C5CA /* Beatris */ = {
 			isa = PBXGroup;
 			children = (
+				60AADC2E226DE51000A0C5CA /* Classes */,
 				60AADBFF226DE4F300A0C5CA /* AppDelegate.swift */,
-				60AADC01226DE4F300A0C5CA /* ViewController.swift */,
+				605ED085226E063400D439D5 /* Commons.swift */,
 				60AADC03226DE4F300A0C5CA /* Main.storyboard */,
 				60AADC06226DE4F500A0C5CA /* Assets.xcassets */,
 				60AADC08226DE4F500A0C5CA /* LaunchScreen.storyboard */,
@@ -123,6 +134,18 @@
 				60AADC21226DE4F600A0C5CA /* Info.plist */,
 			);
 			path = BeatrisUITests;
+			sourceTree = "<group>";
+		};
+		60AADC2E226DE51000A0C5CA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				60AADC2F226DE52B00A0C5CA /* Block.swift */,
+				60AADC31226DE54E00A0C5CA /* BeatrisViewController.swift */,
+				605ED07F226DF57600D439D5 /* EntranceViewController.swift */,
+				605ED081226DFC5C00D439D5 /* BattleFieldView.swift */,
+				605ED083226E031700D439D5 /* Battle.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,8 +279,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60AADC02226DE4F300A0C5CA /* ViewController.swift in Sources */,
+				605ED086226E063400D439D5 /* Commons.swift in Sources */,
+				60AADC30226DE52B00A0C5CA /* Block.swift in Sources */,
+				605ED082226DFC5C00D439D5 /* BattleFieldView.swift in Sources */,
 				60AADC00226DE4F300A0C5CA /* AppDelegate.swift in Sources */,
+				60AADC32226DE54E00A0C5CA /* BeatrisViewController.swift in Sources */,
+				605ED080226DF57600D439D5 /* EntranceViewController.swift in Sources */,
+				605ED084226E031700D439D5 /* Battle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,7 +461,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AXJ343FTFR;
 				INFOPLIST_FILE = Beatris/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -450,7 +480,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AXJ343FTFR;
 				INFOPLIST_FILE = Beatris/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
