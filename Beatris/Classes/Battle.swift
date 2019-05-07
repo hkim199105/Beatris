@@ -18,18 +18,32 @@ class Battle: NSObject {
     var Score:Int
     var Speed:Int
     var Status:battleStatus
-    var mBeatrisViewController:BeatrisViewController
+    var mBattleFieldView:BattleFieldView
+    var Timer:CADisplayLink!
+    var TimerIdx = 0
     
-    required init(mVC:BeatrisViewController) {
-        mBeatrisViewController = mVC
-        self.Status = battleStatus.over
+    required init(mBFV:BattleFieldView) {
+        self.Status = battleStatus.play
         self.Score = 0
         self.Speed = 1
+        mBattleFieldView = mBFV
         
         super.init()
         
         NotificationCenter.default.addObserver(self, selector: #selector(onLineDestroyed(_:)), name: NSNotification.Name(rawValue: "LineDestroyed"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onBattleStatusChanged(_:)), name: NSNotification.Name(rawValue: "BattleStatusChanged"), object: nil)
+        
+        self.Timer = CADisplayLink(target: self, selector: #selector(self.update))
+        self.Timer.preferredFramesPerSecond = 60        // 60fps
+        self.Timer.isPaused = false
+        self.Timer.add(to: .current, forMode: .default)
+    }
+    
+    @objc func update() {
+        self.TimerIdx = self.TimerIdx + 1
+        if TimerIdx % 60 == 1 {
+            mBattleFieldView.update()
+        }
     }
     
     @objc func onLineDestroyed(_ mNotification:Notification) {
@@ -40,20 +54,23 @@ class Battle: NSObject {
     
     @objc func onBattleStatusChanged(_ mNotification:Notification) {
         if let mBattleStatus = mNotification.userInfo?["battleStaus"] as? battleStatus {
-            updateBattleStatus(mBattleStatus: mBattleStatus)
+            updateBattleStatus(mBattleStatus)
         }
     }
     
-    func updateBattleStatus(mBattleStatus: battleStatus) {
+    func updateBattleStatus(_ mBattleStatus: battleStatus) {
         self.Status = mBattleStatus
         switch mBattleStatus {
         case .play:
+            self.Timer.isPaused = false
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "StartBattle"), object: nil)
             break
         case .pause:
+            self.Timer.isPaused = true
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PauseBattle"), object: nil)
             break
         case .over:
+            self.Timer.isPaused = true
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "OverBattle"), object: nil)
             break
         }
