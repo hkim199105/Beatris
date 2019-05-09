@@ -39,6 +39,10 @@ class BeatrisViewController: UIViewController {
         gesRotateLeft.direction = .left
         self.view.addGestureRecognizer(gesRotateLeft)
         
+        let gesDrop = UISwipeGestureRecognizer(target: self, action: #selector(drop))
+        gesDrop.direction = .down
+        self.view.addGestureRecognizer(gesDrop)
+        
         self.mBattle = Battle(mBFV: mBattleFieldView)
     }
     
@@ -83,6 +87,11 @@ class BeatrisViewController: UIViewController {
     @objc func rotateLeft (_ sender : UISwipeGestureRecognizer) {
         print("rotate left")
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "rotateBlockLeft"), object: nil)
+    }
+    
+    @objc func drop (_ sender : UISwipeGestureRecognizer) {
+        print("drop")
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "dropBlock"), object: nil)
     }
     
     @objc func printBlockInfo(mNotification: NSNotification) {

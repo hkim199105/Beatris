@@ -15,19 +15,29 @@ enum blockDirection {
     case down
     case left
     case right
+    case center
 }
 
 class BattleFieldView: UIView {
     
     var width = 10
     var height = 20
-    var gap = 1
+    var gap = 0
     var currentBlock: Block?
-    var field:[[Int]]
+    var field:[[UIColor]]
+    var bgColor = UIColor.white
     
     // storyboard에서 사용하기 위한 필수 init
     required init?(coder aDecoder: NSCoder) {
-        field = [[Int]](repeating: Array(repeating: 0,count: self.height ), count: self.width)
+        field = [[UIColor]](repeating: Array(repeating: bgColor,count: self.height ), count: self.width)
+        
+        for y in stride(from: self.height-1, to: self.height-5, by: -1) {
+            for x in 0..<self.width {
+                if x != 3 {
+                    self.field[x][y] = UIColor.black
+                }
+            }
+        }
         
         super.init(coder: aDecoder)
         
@@ -35,11 +45,12 @@ class BattleFieldView: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(moveBlockRight), name: NSNotification.Name(rawValue: "moveBlockRight"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rotateBlockLeft), name: NSNotification.Name(rawValue: "rotateBlockLeft"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rotateBlockRight), name: NSNotification.Name(rawValue: "rotateBlockRight"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dropBlock), name: NSNotification.Name(rawValue: "dropBlock"), object: nil)
         generateBlock()
     }
     
     override init(frame: CGRect) {
-        field = [[Int]](repeating: Array(repeating: 0, count: self.width ), count: self.height)
+        field = [[UIColor]](repeating: Array(repeating: bgColor, count: self.width ), count: self.height)
         super.init(frame: frame)
         
     }
@@ -50,34 +61,21 @@ class BattleFieldView: UIView {
                            width: cellWidth,
                            height: cellHeight)
         color.set()
-        UIBezierPath(roundedRect: block, cornerRadius: 3).fill()
+        UIBezierPath(roundedRect: block, cornerRadius: 0).fill()
     }
     
     override func draw(_ rect: CGRect) {
-        let cellWidth = (rect.width - CGFloat(gap + self.width) + 1) / CGFloat(self.width)
-        let cellHeight = (rect.height - CGFloat(gap + self.height) + 1) / CGFloat(self.height)
+        let cellWidth = (rect.width - CGFloat(gap + self.width)) / CGFloat(self.width)
+        let cellHeight = (rect.height - CGFloat(gap + self.height)) / CGFloat(self.height)
         
-        // draw field
+        // draw field and stacked blocks
         for x in 0..<self.width {
             for y in 0..<self.height {
-                drawCell(x: CGFloat((x + self.gap)) + CGFloat(x) * cellWidth,
-                         y: CGFloat((y + self.gap)) + CGFloat(y) * cellHeight,
+                drawCell(x: CGFloat(x + self.gap) + CGFloat(x) * cellWidth,
+                         y: CGFloat(y + self.gap) + CGFloat(y) * cellHeight,
                          cellWidth: CGFloat(cellWidth),
                          cellHeight: CGFloat(cellHeight),
-                         color: UIColor.black)
-            }
-        }
-        
-        // draw stacked blocks
-        for x in 0..<field.count {
-            for y in 0..<field[x].count {
-                if field[x][y] == 1 {
-                    drawCell(x: CGFloat((x + self.gap)) + CGFloat(x) * cellWidth,
-                             y: CGFloat((y + self.gap)) + CGFloat(y) * cellHeight,
-                             cellWidth: CGFloat(cellWidth),
-                             cellHeight: CGFloat(cellHeight),
-                             color: UIColor.green)
-                }
+                         color: self.field[x][y])
             }
         }
         
@@ -92,28 +90,56 @@ class BattleFieldView: UIView {
                      y: y + CGFloat(self.gap) + y * cellHeight,
                      cellWidth: CGFloat(cellWidth),
                      cellHeight: CGFloat(cellHeight),
-                     color: UIColor.orange)
+                     color: currentBlock.color)
         }
     }
     
     func update() {
         guard let currentBlock = self.currentBlock else { return }
         
-        if isAvailMove(.down) {
+        if isAvailMove(.down) == true {
             currentBlock.moveDown()
         } else {
             for cell in currentBlock.cells {
                 let x = Int(cell.x + currentBlock.position.x)
                 let y = Int(cell.y + currentBlock.position.y)
                 if x >= 0 && x < field.count && y >= 0 && y < field[x].count {
-                    field[x][y] = 1
+                    field[x][y] = currentBlock.color
                 }
             }
             
             generateBlock()
         }
+        deleteLines()
         
         self.setNeedsDisplay()
+    }
+    
+    func deleteLines() {
+        for y in stride(from: 0, to: self.height - 1, by: 1) {
+            var isFullLine = true
+            
+            // check if the line if full
+            for x in 0..<self.width {
+                if self.field[x][y] == self.bgColor {
+                    isFullLine = false
+                }
+            }
+            
+            // delete the line(y) and drop upper lines
+            if isFullLine == true {
+                for mY in stride(from: y, to: 0, by: -1) {
+                    for mX in 0..<self.width{
+                        if mY == 0 {
+                            self.field[mX][mY] = self.bgColor
+                        } else {
+                            self.field[mX][mY] = self.field[mX][mY-1]
+                        }
+                        self.setNeedsDisplay()
+                    }
+                }
+            }
+        }
     }
     
     func isAvailMove(_ mBlockDirection:blockDirection) -> Bool {
@@ -131,12 +157,13 @@ class BattleFieldView: UIView {
                 }
                 
                 // reached another block
-                if x >= 0 && x < field.count && y + 1 >= 0 && y + 1 <= field[x].count {
-                    if field[x][y + 1] == 1 {
+                if x >= 0 && x < field.count && y + 1 >= 0 && y + 1 < field[x].count {
+                    if field[x][y + 1] != bgColor {
                         return false
                     }
                 }
                 break
+                
             case .left:
                 // reached wall
                 if x <= 0 {
@@ -144,12 +171,13 @@ class BattleFieldView: UIView {
                 }
                 
                 // reached another block
-                if x - 1 >= 0 && x < field.count && y >= 0 && y <= field[x].count {
-                    if field[x - 1][y] == 1 {
+                if x - 1 >= 0 && x < field.count && y >= 0 && y < field[x].count {
+                    if field[x - 1][y] != bgColor {
                         return false
                     }
                 }
                 break
+                
             case .right:
                 // reached wall
                 if x >= self.width - 1 {
@@ -157,13 +185,31 @@ class BattleFieldView: UIView {
                 }
                 
                 // reached another block
-                if x + 1 >= 0 && x + 1 < field.count  && y >= 0 && y <= field[x].count {
-                    if field[x + 1][y] == 1 {
+                if x + 1 >= 0 && x + 1 < field.count  && y >= 0 && y < field[x].count {
+                    if field[x + 1][y] != self.bgColor {
                         return false
                     }
                 }
                 break
+                
             case .up:
+                break
+                
+            case .center:
+                // reached wall
+                if x < 0 {
+                    return false
+                }
+                if x > self.width - 1 {
+                    return false
+                }
+                
+                // reached another block
+                if x >= 0 && x < field.count  && y >= 0 && y < field[x].count {
+                    if field[x][y] != self.bgColor {
+                        return false
+                    }
+                }
                 break
             }
         }
@@ -199,7 +245,13 @@ class BattleFieldView: UIView {
     @objc func rotateBlockRight() {
         guard let currentBlock = self.currentBlock else { return }
         
+        let befCells = NSArray(array:currentBlock.cells, copyItems: true)
+        
         currentBlock.rotateRight()
+        
+        if isAvailMove(.center) == false {
+            currentBlock.cells = NSArray(array:befCells as! [Any], copyItems: true) as! [CGPoint]
+        }
         
         self.setNeedsDisplay()
     }
@@ -207,7 +259,35 @@ class BattleFieldView: UIView {
     @objc func rotateBlockLeft() {
         guard let currentBlock = self.currentBlock else { return }
         
+        let originalCells = NSArray(array:currentBlock.cells, copyItems: true)
+        let originalPosition = CGPoint(x: currentBlock.position.x, y: currentBlock.position.y)
+        var isMoved = false
+        
         currentBlock.rotateLeft()
+        
+        // move block if there is no space but side
+        for x in 0..<self.width {
+            let mX = currentBlock.position.x
+            let mY = currentBlock.position.y
+            
+            currentBlock.position = CGPoint(x: mX + CGFloat(x), y: mY)
+            if isAvailMove(.center) == true {
+                isMoved = true
+                break
+            }
+            
+            currentBlock.position = CGPoint(x: mX - CGFloat(x), y: mY)
+            if isAvailMove(.center) == true {
+                isMoved = true
+                break
+            }
+        }
+        
+        // cancel rotate if there is no space neither side
+        if isMoved == false {
+            currentBlock.cells = NSArray(array:originalCells as! [Any], copyItems: true) as! [CGPoint]
+            currentBlock.position = originalPosition
+        }
         
         self.setNeedsDisplay()
     }
@@ -215,7 +295,7 @@ class BattleFieldView: UIView {
     @objc func moveBlockRight() {
         guard let currentBlock = self.currentBlock else { return }
         
-        if isAvailMove(.right) {
+        if isAvailMove(.right) == true {
             currentBlock.moveRight()
         }
         
@@ -225,10 +305,22 @@ class BattleFieldView: UIView {
     @objc func moveBlockLeft() {
         guard let currentBlock = self.currentBlock else { return }
         
-        if isAvailMove(.left) {
+        if isAvailMove(.left) == true {
             currentBlock.moveLeft()
         }
         
         self.setNeedsDisplay()
+    }
+    
+    @objc func dropBlock() {
+        guard let currentBlock = self.currentBlock else { return }
+        
+        while(isAvailMove(.down) == true) {
+            currentBlock.moveDown()
+            deleteLines()
+            self.setNeedsDisplay()
+        }
+        
+        self.update()
     }
 }
