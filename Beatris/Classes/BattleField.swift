@@ -18,7 +18,7 @@ enum blockDirection {
     case center
 }
 
-class BattleFieldView: UIView {
+class BattleField: UIView {
     
     var width = 10
     var height = 20
@@ -26,6 +26,7 @@ class BattleFieldView: UIView {
     var currentBlock: Block?
     var field:[[UIColor]]
     var bgColor = UIColor.white
+    var mBattle: Battle?
     
     // storyboard에서 사용하기 위한 필수 init
     required init?(coder aDecoder: NSCoder) {
@@ -116,7 +117,9 @@ class BattleFieldView: UIView {
     }
     
     func deleteLines() {
-        for y in stride(from: 0, to: self.height - 1, by: 1) {
+        var numFullLine = 0
+        
+        for y in stride(from: 0, to: self.height, by: 1) {
             var isFullLine = true
             
             // check if the line if full
@@ -128,6 +131,8 @@ class BattleFieldView: UIView {
             
             // delete the line(y) and drop upper lines
             if isFullLine == true {
+                numFullLine = numFullLine + 1
+                
                 for mY in stride(from: y, to: 0, by: -1) {
                     for mX in 0..<self.width{
                         if mY == 0 {
@@ -139,6 +144,10 @@ class BattleFieldView: UIView {
                     }
                 }
             }
+        }
+        
+        if numFullLine > 0 {
+            self.mBattle?.onLineDestroyed(numFullLine)
         }
     }
     
@@ -238,6 +247,11 @@ class BattleFieldView: UIView {
         currentBlock.position.x = CGFloat(floor((CGFloat(self.width) - blockWidth) / 2))
         currentBlock.position.y = -blockHeight
         AudioServicesPlayAlertSound(1521)
+        
+        // check if game over
+        if isAvailMove(.center) == false {
+            self.mBattle?.updateBattleStatus(.over)
+        }
         
         self.setNeedsDisplay()
     }

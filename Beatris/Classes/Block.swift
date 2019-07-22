@@ -110,7 +110,7 @@ class Block: NSObject {
     }
     
     static func generate() -> Block {
-        return Block(mBlocktype: .randomBlockType())
+        return Block(mBlocktype: .a)
     }
     
     func moveLeft() {

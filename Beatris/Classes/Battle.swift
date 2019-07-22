@@ -18,11 +18,11 @@ class Battle: NSObject {
     var Score:Int
     var Speed:Int
     var Status:battleStatus
-    var mBattleFieldView:BattleFieldView
-    var Timer:CADisplayLink!
+    var mBattleFieldView:BattleField
+    var Timer:CADisplayLink?
     var TimerIdx = 0
     
-    required init(mBFV:BattleFieldView) {
+    required init(mBFV:BattleField) {
         self.Status = battleStatus.play
         self.Score = 0
         self.Speed = 1
@@ -30,13 +30,12 @@ class Battle: NSObject {
         
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(onLineDestroyed(_:)), name: NSNotification.Name(rawValue: "LineDestroyed"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onBattleStatusChanged(_:)), name: NSNotification.Name(rawValue: "BattleStatusChanged"), object: nil)
-        
         self.Timer = CADisplayLink(target: self, selector: #selector(self.update))
-        self.Timer.preferredFramesPerSecond = 60        // 60fps
-        self.Timer.isPaused = false
-        self.Timer.add(to: .current, forMode: .default)
+        self.Timer?.preferredFramesPerSecond = 60        // 60fps
+        self.Timer?.isPaused = false
+        self.Timer?.add(to: .current, forMode: .default)
+        
+        self.mBattleFieldView.mBattle = self
     }
     
     @objc func update() {
@@ -46,42 +45,39 @@ class Battle: NSObject {
         }
     }
     
-    @objc func onLineDestroyed(_ mNotification:Notification) {
-        if let lines = mNotification.userInfo?["lines"] as? Int {
-            updateScore(add: 50 * 2 ^^ lines)
-        }
-    }
-    
-    @objc func onBattleStatusChanged(_ mNotification:Notification) {
-        if let mBattleStatus = mNotification.userInfo?["battleStaus"] as? battleStatus {
-            updateBattleStatus(mBattleStatus)
-        }
+    @objc func onLineDestroyed(_ numLines:Int) {
+        updateScore(add: 50 * 2 ^^ numLines)
     }
     
     func updateBattleStatus(_ mBattleStatus: battleStatus) {
         self.Status = mBattleStatus
         switch mBattleStatus {
         case .play:
-            self.Timer.isPaused = false
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "StartBattle"), object: nil)
+            self.Timer?.isPaused = false
             break
         case .pause:
-            self.Timer.isPaused = true
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "PauseBattle"), object: nil)
+            self.Timer?.isPaused = true
             break
         case .over:
-            self.Timer.isPaused = true
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "OverBattle"), object: nil)
+            self.Timer?.isPaused = true
+            self.Timer?.remove(from: .current, forMode: .default)
+            self.Timer?.invalidate()
+            self.Timer = nil
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "overBattle"), object: nil)
             break
         }
     }
     
     func updateScore(add: Int) {
         self.Score += add
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "updateScore"), object: self.Score)
+        
         updateSpeed()
     }
     
     func updateSpeed() {
-        self.Speed = Score / 500
+        self.Speed = Score / 50
     }
 }

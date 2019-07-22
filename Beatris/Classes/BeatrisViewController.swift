@@ -13,8 +13,9 @@ class BeatrisViewController: UIViewController {
     @IBOutlet var btnOver: UIButton!
     @IBOutlet var btnPause: UIButton!
     @IBOutlet var lblInfo: UILabel!
-    @IBOutlet weak var mBattleFieldView: BattleFieldView!
-    var mBattle: Battle!
+    @IBOutlet var lblScore: UILabel!
+    @IBOutlet weak var mBattleFieldView: BattleField!
+    var mBattle: Battle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,8 @@ class BeatrisViewController: UIViewController {
         self.btnOver.addTarget(self, action: #selector(onClickBtnOver), for: .touchUpInside)
         self.btnPause.addTarget(self, action: #selector(onClickBtnPause), for: .touchUpInside)
         NotificationCenter.default.addObserver(self, selector: #selector(printBlockInfo(mNotification:)), name: NSNotification.Name(rawValue: "moveBlock"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteBattleView), name: NSNotification.Name(rawValue: "overBattle"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(printScore(mNotification:)), name: NSNotification.Name(rawValue: "updateScore"), object: nil)
         
         let gesMoveBlock = UITapGestureRecognizer(target: self, action: #selector(moveBlock))
         gesMoveBlock.numberOfTouchesRequired = 1
@@ -46,24 +49,38 @@ class BeatrisViewController: UIViewController {
         self.mBattle = Battle(mBFV: mBattleFieldView)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        self.mBattle = nil
+        
+        super.viewWillDisappear(animated)
+    }
+    
     @objc func onClickBtnPause() {
-        if self.mBattle.Status == .pause {
-            self.playGame()
-        } else if self.mBattle.Status == .play {
-            self.pauseGame()
+        if self.mBattle?.Status == .pause {
+            self.playBattle()
+        } else if self.mBattle?.Status == .play {
+            self.pauseBattle()
         }
     }
     
     @objc func onClickBtnOver() {
+        overBattle()
+    }
+    
+    func pauseBattle() {
+        self.mBattle?.updateBattleStatus(.pause)
+    }
+    
+    func playBattle() {
+        self.mBattle?.updateBattleStatus(.play)
+    }
+    
+    func overBattle() {
+        self.mBattle?.updateBattleStatus(.over)
+    }
+    
+    @objc func deleteBattleView() {
         self.dismiss(animated: true)
-    }
-    
-    func pauseGame() {
-        self.mBattle.updateBattleStatus(.pause)
-    }
-    
-    func playGame() {
-        self.mBattle.updateBattleStatus(.play)
     }
     
     @objc func moveBlock (_ sender : UIPanGestureRecognizer) {
@@ -101,6 +118,12 @@ class BeatrisViewController: UIViewController {
                 tempStr = tempStr + "\nx: " + cell.x.description + "\ty: " + cell.y.description
             }
             self.lblInfo.text = tempStr
+        }
+    }
+    
+    @objc func printScore(mNotification: NSNotification) {
+        if let mScore = mNotification.object as? Int {
+            self.lblScore.text = "Score: " + String(mScore)
         }
     }
 }

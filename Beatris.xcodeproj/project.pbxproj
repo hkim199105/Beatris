@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		605ED080226DF57600D439D5 /* EntranceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED07F226DF57600D439D5 /* EntranceViewController.swift */; };
-		605ED082226DFC5C00D439D5 /* BattleFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED081226DFC5C00D439D5 /* BattleFieldView.swift */; };
+		605ED082226DFC5C00D439D5 /* BattleField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED081226DFC5C00D439D5 /* BattleField.swift */; };
 		605ED084226E031700D439D5 /* Battle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED083226E031700D439D5 /* Battle.swift */; };
 		605ED086226E063400D439D5 /* Commons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605ED085226E063400D439D5 /* Commons.swift */; };
 		60AADC00226DE4F300A0C5CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AADBFF226DE4F300A0C5CA /* AppDelegate.swift */; };
@@ -40,7 +40,7 @@
 
 /* Begin PBXFileReference section */
 		605ED07F226DF57600D439D5 /* EntranceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntranceViewController.swift; sourceTree = "<group>"; };
-		605ED081226DFC5C00D439D5 /* BattleFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleFieldView.swift; sourceTree = "<group>"; };
+		605ED081226DFC5C00D439D5 /* BattleField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleField.swift; sourceTree = "<group>"; };
 		605ED083226E031700D439D5 /* Battle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Battle.swift; sourceTree = "<group>"; };
 		605ED085226E063400D439D5 /* Commons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commons.swift; sourceTree = "<group>"; };
 		60AADBFC226DE4F300A0C5CA /* Beatris.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Beatris.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,7 +142,7 @@
 				60AADC2F226DE52B00A0C5CA /* Block.swift */,
 				60AADC31226DE54E00A0C5CA /* BeatrisViewController.swift */,
 				605ED07F226DF57600D439D5 /* EntranceViewController.swift */,
-				605ED081226DFC5C00D439D5 /* BattleFieldView.swift */,
+				605ED081226DFC5C00D439D5 /* BattleField.swift */,
 				605ED083226E031700D439D5 /* Battle.swift */,
 			);
 			path = Classes;
@@ -281,7 +281,7 @@
 			files = (
 				605ED086226E063400D439D5 /* Commons.swift in Sources */,
 				60AADC30226DE52B00A0C5CA /* Block.swift in Sources */,
-				605ED082226DFC5C00D439D5 /* BattleFieldView.swift in Sources */,
+				605ED082226DFC5C00D439D5 /* BattleField.swift in Sources */,
 				60AADC00226DE4F300A0C5CA /* AppDelegate.swift in Sources */,
 				60AADC32226DE54E00A0C5CA /* BeatrisViewController.swift in Sources */,
 				605ED080226DF57600D439D5 /* EntranceViewController.swift in Sources */,
